@@ -1,9 +1,12 @@
 const express = require('express')
-const res = require('express/lib/response')
 const router = express.Router()
+const User = require('../models/User')
 
-router.get('/', () => {
-    res.send('auth called')
+
+router.post('/', (req, res) => {
+    const user = User(req.body);
+    user.save()
+    res.send(user)
 })
 
 module.exports = router
