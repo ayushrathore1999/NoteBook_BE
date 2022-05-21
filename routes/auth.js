@@ -4,6 +4,7 @@ const User = require('../models/User')
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const fetchUser = require('../middlewares/auth');
 
 const JWT_SECRET = 'buldozer';
 
@@ -75,5 +76,18 @@ router.get('/login', [
     }
 
 })
+
+router.get('/getUser', fetchUser,
+
+    async (req, res) => {
+        try {
+            const userId = req.body.user.id
+            const user = await User.findById(userId).select("-password")
+            res.status(200).send(user)
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json({ err: "Something went wrong" })
+        }
+    })
 
 module.exports = router
